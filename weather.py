@@ -35,7 +35,7 @@ def dict_to_nt(name: str, dct: dict):
 class Weather:
     """
     collect data from the National Weather Service API
-    & generate text report
+    and generate reports
     """
 
     WEATHER_BASE_URL = "https://api.weather.gov"
@@ -91,7 +91,7 @@ class Weather:
         quant = UREG.Quantity(val, UREG(unit.base))
         return quant.to(getattr(unit, self.units))
 
-    def _process_current_conditions(self, data):
+    def _process_current(self, data):
         obs = {
             k: self._to_units(v)
             for k, v in data.items()
@@ -146,9 +146,7 @@ class Weather:
         self.station = dict_to_nt("station", resp)
         latest_url = f"{self.station.id}/observations/latest"
         resp = self.wtr_get(latest_url)
-        self.current = dict_to_nt(
-            "current", self._process_current_conditions(resp)
-        )
+        self.current = dict_to_nt("current", self._process_current(resp))
 
     def calc_suntime(self):
         sun = Sun(float(self.area.lat), float(self.area.long))
@@ -173,3 +171,9 @@ class Weather:
             self.forecast.immediate,
         ]
         return "\n".join(msg)
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"zipcode='{self.zipcode}', units='{self.units}')"
+        )

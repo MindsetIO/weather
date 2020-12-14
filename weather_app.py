@@ -10,7 +10,7 @@ def main(zipcode, units="F"):
 
 
 if __name__ == "__main__":  # Local Testing
-    zipcode = 10010
+    zipcode = "10001"
     units = "m"  # "F"/"US" or "m"/"SI"
     resp = main(zipcode=zipcode, units=units)
     print(resp["text"])
