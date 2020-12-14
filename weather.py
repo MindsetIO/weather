@@ -22,7 +22,7 @@ UNIT_MAP = {
 }
 UNIT_NTS = {k: UNIT_NT(*v) for k, v in UNIT_MAP.items()}
 UREG = pint.UnitRegistry()
-UREG.define("percent = 1e-2 frac")
+UREG.define("percent = 1e-2 frac = %")
 pint.Quantity.__format__ = lambda a, _: f"{a.magnitude:0.1f}{a.units:~}"
 
 
@@ -166,7 +166,7 @@ class Weather:
             f"{self.timestamp.strftime('%a %I:%M%p').replace(' 0', ' ')}",
             f"Now: {self.current.temperature}, {self.current.desc.lower()}, "
             f"next 24h: {hi_lo[0]} to {hi_lo[1]}",
-            f"Humidity: {self.current.relativeHumidity.magnitude:0.1f}%, "
+            f"Humidity: {self.current.relativeHumidity}, "
             f"visibility: {self.current.visibility}",
             f"Daytime {self.suntime.sunrise.strftime('%_I:%M%p').strip()} to "
             f"{self.suntime.sunset.strftime('%_I:%M%p').strip()}",
