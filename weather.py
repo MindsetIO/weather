@@ -40,7 +40,7 @@ class Weather:
 
     WEATHER_BASE_URL = "https://api.weather.gov"
 
-    def __init__(self, area, units="us"):
+    def __init__(self, area, units="F"):
         self.area = area
         self.zipcode = self.area.zip_code
         self.tz = ZoneInfo(area.timezone)
@@ -52,8 +52,6 @@ class Weather:
         self.station = None
         self.forecast = None
         self.suntime = None
-        self.fetch_weather()
-        self.calc_suntime()
 
     @staticmethod
     def area_info(zipcode):
@@ -64,11 +62,14 @@ class Weather:
     def from_zipcode(cls, zipcode: [str, int], units: [str, None] = "F"):
         """
         :param zipcode: 5-digit string or integer with valid US zipcode
-        :param units: for US use "F" or "US", metric: "M" or "SI"
+        :param units - for US: "F" or "US", metric: "M" or "SI"
         :return: Weather class instance
         """
         area = cls.area_info(zipcode)
-        return cls(area=area, units=units)
+        obj = cls(area=area, units=units)
+        obj.fetch_weather()
+        obj.calc_suntime()
+        return obj
 
     @classmethod
     def wtr_get(cls, route: str, params: dict = None, key="properties"):
@@ -157,15 +158,14 @@ class Weather:
         }
         self.suntime = dict_to_nt("suntime", sdct)
 
-    def text_report(self):
-        temp = f"{self.current.temperature:~}"
-        ftemps = self.forecast.periods[:24]
-        next24 = [f([p.temperature for p in ftemps]) for f in [min, max]]
+    def text_report(self, forecast_periods: int = 24):
+        ftemps = self.forecast.periods[:forecast_periods]
+        hi_lo = [f([p.temperature for p in ftemps]) for f in [min, max]]
         msg = [
             f"Weather for {self.area.city} ({self.area.zip_code}) - "
             f"{self.timestamp.strftime('%a %I:%M%p').replace(' 0', ' ')}",
-            f"Now: {temp}, {self.current.desc.lower()}, "
-            f"next 24h: {next24[0]:~} to {next24[1]:~}",
+            f"Now: {self.current.temperature}, {self.current.desc.lower()}, "
+            f"next 24h: {hi_lo[0]:~} to {hi_lo[1]:~}",
             f"Humidity: {self.current.relativeHumidity.magnitude:0.1f}%, "
             f"visibility: {self.current.visibility:~0.1f}",
             f"Daytime {self.suntime.sunrise.strftime('%_I:%M%p').strip()} to "
