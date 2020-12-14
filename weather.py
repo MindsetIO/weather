@@ -165,9 +165,9 @@ class Weather:
             f"Weather for {self.area.city} ({self.area.zip_code}) - "
             f"{self.timestamp.strftime('%a %I:%M%p').replace(' 0', ' ')}",
             f"Now: {self.current.temperature}, {self.current.desc.lower()}, "
-            f"next 24h: {hi_lo[0]:~} to {hi_lo[1]:~}",
+            f"next 24h: {hi_lo[0]} to {hi_lo[1]}",
             f"Humidity: {self.current.relativeHumidity.magnitude:0.1f}%, "
-            f"visibility: {self.current.visibility:~0.1f}",
+            f"visibility: {self.current.visibility}",
             f"Daytime {self.suntime.sunrise.strftime('%_I:%M%p').strip()} to "
             f"{self.suntime.sunset.strftime('%_I:%M%p').strip()}",
             self.forecast.immediate,
