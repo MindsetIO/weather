@@ -104,7 +104,18 @@ class Weather:
             {"base": self._to_units(c["base"]), "amount": c["amount"]}
             for c in data["cloudLayers"]
         ]
+        obs["data"] = self._serialize(obs)
         return obs
+
+    @staticmethod
+    def _serialize(data):
+        EXCLUDED_FIELDS = ["elevation", "cloud_layers"]
+        sdct = {}
+        for k, v in data.items():
+            if k in EXCLUDED_FIELDS or v is None:
+                continue
+            sdct[k] = v.magnitude if isinstance(v, pint.Quantity) else v
+        return sdct
 
     def _process_forecast(self, data):
         def _period(per):
@@ -146,7 +157,8 @@ class Weather:
         self.station = dict_to_nt("station", resp)
         latest_url = f"{self.station.id}/observations/latest"
         resp = self.wtr_get(latest_url)
-        self.current = dict_to_nt("current", self._process_current(resp))
+        current = self._process_current(resp)
+        self.current = dict_to_nt("current", current)
 
     def calc_suntime(self):
         sun = Sun(float(self.area.lat), float(self.area.long))
