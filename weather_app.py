@@ -6,7 +6,6 @@ from weather import Weather
 
 
 def main(zipcode, units="F"):
-    print(timeit)
     wtr = Weather.from_zipcode(zipcode, units=units)
     text = wtr.text_report()
     return {"text": text, **wtr.current.data}
