@@ -79,7 +79,7 @@ class Weather:
         if resp.status_code == 200:
             data = resp.json()
             return data if key is None else data[key]
-        raise Exception("weather api fetch error")
+        raise Exception(f"API error: {url=}, {params=}")
 
     def _local_time(self, timestamp):
         return dt.fromisoformat(timestamp).astimezone(self.tz)
