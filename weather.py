@@ -115,7 +115,6 @@ class Weather:
             if k in EXCLUDED_FIELDS or v is None:
                 continue
             sdct[k] = round(v.magnitude,2) if isinstance(v, pint.Quantity) else v
-        print(sdct)
         return sdct
 
     def _process_forecast(self, data):
@@ -159,7 +158,6 @@ class Weather:
         latest_url = f"{self.station.id}/observations/latest"
         resp = self.wtr_get(latest_url)
         current = self._process_current(resp)
-        print(current)
         self.current = dict_to_nt("current", current)
 
     def calc_suntime(self):
