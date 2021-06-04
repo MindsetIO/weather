@@ -115,6 +115,7 @@ class Weather:
             if k in EXCLUDED_FIELDS or v is None:
                 continue
             sdct[k] = v.magnitude if isinstance(v, pint.Quantity) else v
+        print(sdct)
         return sdct
 
     def _process_forecast(self, data):
