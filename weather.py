@@ -114,7 +114,7 @@ class Weather:
         for k, v in data.items():
             if k in EXCLUDED_FIELDS or v is None:
                 continue
-            sdct[k] = v.magnitude if isinstance(v, pint.Quantity) else v
+            sdct[k] = round(v.magnitude,2) if isinstance(v, pint.Quantity) else v
         print(sdct)
         return sdct
 
