@@ -158,6 +158,7 @@ class Weather:
         latest_url = f"{self.station.id}/observations/latest"
         resp = self.wtr_get(latest_url)
         current = self._process_current(resp)
+        print(current)
         self.current = dict_to_nt("current", current)
 
     def calc_suntime(self):
